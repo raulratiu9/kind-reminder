@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "890937954065",
+    "project_id": "kind-reminder-f490e",
+    "storage_bucket": "kind-reminder-f490e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890937954065:android:9e6084f3bddf309469c6b0",
+        "android_client_info": {
+          "package_name": "com.example.kindreminder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCksciVCoj9B52lHB5VqaTDoP4hCliqaqg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
