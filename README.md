@@ -1,2 +1,3 @@
 # kind-reminder
-My first Mobile App developed in Android Studio (Kotlin &amp; React Native)
+
+My first Mobile App developed in Android Studio (Kotlin &amp; Firebase)

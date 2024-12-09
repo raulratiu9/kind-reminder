@@ -1,47 +1,48 @@
 package com.example.kindreminder
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.kindreminder.ui.theme.KindReminderTheme
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.kindreminder.firebase.FirebaseHelpers
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.FirebaseApp
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var remindersRecyclerView: RecyclerView
+    private lateinit var adapter: ReminderAdapter
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            KindReminderTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+        FirebaseApp.initializeApp(this)
+        setContentView(R.layout.activity_main)
+        val addButton: View = findViewById(R.id.btnAdd)
+
+        addButton.setOnClickListener {
+            val intent = Intent(this, AddReminderActivity::class.java)
+            startActivity(intent)
         }
-    }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+        // Initialize the RecyclerView
+        remindersRecyclerView = findViewById(R.id.remindersRecyclerView)
+        remindersRecyclerView.layoutManager = LinearLayoutManager(this)
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    KindReminderTheme {
-        Greeting("Android")
+        // Fetch reminders from Firestore
+        FirebaseHelpers.getReminders(
+            onSuccess = { reminders ->
+                // Set the adapter with the fetched reminders
+                adapter = ReminderAdapter(reminders)
+                remindersRecyclerView.adapter = adapter
+            },
+            onFailure = { exception ->
+                // Handle the error case
+                // Optionally, show a message or handle the failure
+                // For example: showToast("Error: ${exception.message}")
+            }
+        )
     }
 }
