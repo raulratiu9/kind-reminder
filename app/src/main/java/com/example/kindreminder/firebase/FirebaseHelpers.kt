@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.kindreminder.classes.Reminder
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 
 class FirebaseHelpers {
@@ -17,9 +18,16 @@ class FirebaseHelpers {
 
             remindersCollection.get()
                 .addOnSuccessListener { documents ->
-                    val reminders = documents.map { it.toObject(Reminder::class.java) }
+                    val reminders = documents.map { document ->
+                        val reminder = document.toObject(Reminder::class.java)
+                        reminder.id = document.id
+                        reminder
+                    }
+
+                    Log.d("OAU", reminders.toString())
                     onSuccess(reminders)
                 }
+
                 .addOnFailureListener { exception ->
                     onFailure(exception)
                 }
@@ -32,7 +40,8 @@ class FirebaseHelpers {
             val newReminder = hashMapOf(
                 "name" to name,
                 "time" to time,
-                "finished" to finished
+                "finished" to finished,
+                "id" to FirebaseFirestore.getInstance().collection("reminders").document().id
             )
 
             remindersCollection.add(newReminder).addOnSuccessListener { documentReference ->
@@ -46,7 +55,7 @@ class FirebaseHelpers {
         fun editReminder(
             reminderId: String,
             name: String,
-            time: Long,
+            time: Timestamp,
             finished: Boolean = false
         ) {
             val db = Firebase.firestore
@@ -55,7 +64,8 @@ class FirebaseHelpers {
             val updatedReminder = mapOf(
                 "name" to name,
                 "time" to time,
-                "finished" to finished
+                "finished" to finished,
+                "id" to reminderId
             )
 
             reminder.update(updatedReminder).addOnSuccessListener { documentReference ->

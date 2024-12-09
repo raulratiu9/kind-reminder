@@ -1,6 +1,8 @@
 package com.example.kindreminder
 
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +10,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kindreminder.classes.Reminder
+import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -38,11 +41,27 @@ class ReminderAdapter(private val context: Context, private val reminders: List<
     // Bind the data to each ViewHolder
     override fun onBindViewHolder(holder: ReminderViewHolder, position: Int) {
         val reminder = reminders[position]
+        Log.d("Reminder", reminder.toString())
         holder.nameTextView.text = reminder.name
         holder.timeTextView.text = formatTimestamp(reminder.time.toDate().time)
         holder.finishedCheckBox.isChecked = reminder.finished
+
+        holder.itemView.setOnClickListener {
+            val intent = Intent(context, ReminderDetailsActivity::class.java).apply {
+                putExtra("REMINDER_ID", reminder.id)
+                putExtra("REMINDER_TITLE", reminder.name)
+                putExtra("REMINDER_TIME", reminder.time.toDate())
+                putExtra("REMINDER_FINISHED", reminder.finished)
+            }
+            context.startActivity(intent)
+        }
     }
 
     // Return the size of the list
     override fun getItemCount(): Int = reminders.size
+
+    fun getReminderAtPosition(position: Int): Reminder {
+        return reminders[position]
+    }
+
 }
