@@ -75,5 +75,21 @@ class FirebaseHelpers {
                     Log.w("UpdateReminder", "Error updating reminder", e)
                 }
         }
+
+        fun deleteReminder(
+            reminderId: String,
+        ) {
+            val db = Firebase.firestore
+            val reminder = db.collection("reminders").document(reminderId)
+
+
+
+            reminder.delete().addOnSuccessListener { documentReference ->
+                Log.d("DeleteReminder", "Reminder deleted with ID: ${reminderId}")
+            }
+                .addOnFailureListener { e ->
+                    Log.w("DeleteReminder", "Error deleting reminder", e)
+                }
+        }
     }
 }

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kindreminder.firebase.FirebaseHelpers
+import com.example.kindreminder.ui.SwipeToDeleteCallback
 import com.example.kindreminder.ui.SwipeToEditCallback
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.FirebaseApp
@@ -42,8 +43,11 @@ class MainActivity : AppCompatActivity() {
 
 // Attach ItemTouchHelper for swipe-to-edit
                 val swipeToEditCallback = SwipeToEditCallback(this, adapter)
-                val itemTouchHelper = ItemTouchHelper(swipeToEditCallback)
-                itemTouchHelper.attachToRecyclerView(remindersRecyclerView)
+                val swipeToDeleteCallback = SwipeToDeleteCallback(this, adapter)
+                val editTouchHelper = ItemTouchHelper(swipeToEditCallback)
+                val deleteTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
+                editTouchHelper.attachToRecyclerView(remindersRecyclerView)
+                deleteTouchHelper.attachToRecyclerView(remindersRecyclerView)
             },
             onFailure = { exception ->
                 // Handle the error case
