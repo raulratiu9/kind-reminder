@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         FirebaseHelpers.getReminders(
             onSuccess = { reminders ->
                 // Set the adapter with the fetched reminders
-                adapter = ReminderAdapter(reminders)
+                adapter = ReminderAdapter(this, reminders)
                 remindersRecyclerView.adapter = adapter
             },
             onFailure = { exception ->

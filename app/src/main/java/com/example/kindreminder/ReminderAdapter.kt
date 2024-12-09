@@ -1,5 +1,6 @@
 package com.example.kindreminder
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,13 +8,12 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kindreminder.classes.Reminder
-import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 
-class ReminderAdapter(private val reminders: List<Reminder>) :
+class ReminderAdapter(private val context: Context, private val reminders: List<Reminder>) :
     RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder>() {
 
     // ViewHolder class to hold the views for each item

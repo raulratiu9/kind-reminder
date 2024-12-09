@@ -42,5 +42,28 @@ class FirebaseHelpers {
                     Log.w("AddReminder", "Error adding reminder", e)
                 }
         }
+
+        fun editReminder(
+            reminderId: String,
+            name: String,
+            time: Long,
+            finished: Boolean = false
+        ) {
+            val db = Firebase.firestore
+            val reminder = db.collection("reminders").document(reminderId)
+
+            val updatedReminder = mapOf(
+                "name" to name,
+                "time" to time,
+                "finished" to finished
+            )
+
+            reminder.update(updatedReminder).addOnSuccessListener { documentReference ->
+                Log.d("UpdateReminder", "Reminder updated with ID: ${reminderId}")
+            }
+                .addOnFailureListener { e ->
+                    Log.w("UpdateReminder", "Error updating reminder", e)
+                }
+        }
     }
 }
