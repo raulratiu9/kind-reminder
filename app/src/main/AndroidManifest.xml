@@ -23,7 +23,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".AddReminderActivity" />
-        <activity android:name=".ReminderDetailsActivity" />
+        <activity
+            android:name=".ReminderDetailsActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
 
     </application>

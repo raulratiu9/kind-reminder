@@ -1,28 +1,38 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:id="@+id/rootLayout"
+    android:padding="16dp"
+    android:weightSum="1">
 
-    <com.google.android.material.textfield.TextInputLayout
+    <!-- Reminder Name EditText inside TextInputLayout -->
+    <com.google.android.material.textfield.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/nameTextInputLayout"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:hint="Reminder Name">
+        app:boxBackgroundMode="outline"
+        app:boxBackgroundColor="@android:color/white"
+        app:boxStrokeWidth="2dp">
 
         <EditText
             android:id="@+id/nameTextInputEditText"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:paddingBottom="16dp" />
+            android:paddingBottom="16dp"
+            android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Reminder Detail TextView -->
     <TextView
         android:id="@+id/reminderDetailTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:text="Reminder details will be displayed here." />
+
 </LinearLayout>
