@@ -16,7 +16,6 @@ class FirebaseHelpers {
             val db = Firebase.firestore
             val remindersCollection = db.collection("reminders")
 
-            // Attach a listener for real-time updates
             remindersCollection.addSnapshotListener { snapshots, exception ->
                 if (exception != null) {
                     Log.e(
@@ -46,7 +45,7 @@ class FirebaseHelpers {
                     onSuccess(reminders)
                 } else {
                     Log.d("Firestore", "No reminders found.")
-                    onSuccess(emptyList()) // Return an empty list if no documents
+                    onSuccess(emptyList())
                 }
             }
         }
@@ -66,7 +65,7 @@ class FirebaseHelpers {
                 Log.d("AddReminder", "Reminder added with ID: ${documentReference.id}")
             }
                 .addOnFailureListener { e ->
-                    Log.w("AddReminder", "Error adding reminder", e)
+                    Log.e("AddReminder", "Error adding reminder", e)
                 }
         }
 
@@ -86,11 +85,11 @@ class FirebaseHelpers {
                 "id" to reminderId
             )
 
-            reminder.update(updatedReminder).addOnSuccessListener { documentReference ->
-                Log.d("UpdateReminder", "Reminder updated with ID: ${reminderId}")
+            reminder.update(updatedReminder).addOnSuccessListener {
+                Log.d("UpdateReminder", "Reminder updated with ID: $reminderId")
             }
                 .addOnFailureListener { e ->
-                    Log.w("UpdateReminder", "Error updating reminder", e)
+                    Log.e("UpdateReminder", "Error updating reminder", e)
                 }
         }
 
@@ -102,11 +101,11 @@ class FirebaseHelpers {
 
 
 
-            reminder.delete().addOnSuccessListener { documentReference ->
-                Log.d("DeleteReminder", "Reminder deleted with ID: ${reminderId}")
+            reminder.delete().addOnSuccessListener {
+                Log.d("DeleteReminder", "Reminder deleted with ID: $reminderId")
             }
                 .addOnFailureListener { e ->
-                    Log.w("DeleteReminder", "Error deleting reminder", e)
+                    Log.e("DeleteReminder", "Error deleting reminder", e)
                 }
         }
     }
