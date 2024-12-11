@@ -16,21 +16,38 @@ class FirebaseHelpers {
             val db = Firebase.firestore
             val remindersCollection = db.collection("reminders")
 
-            remindersCollection.get()
-                .addOnSuccessListener { documents ->
-                    val reminders = documents.map { document ->
-                        val reminder = document.toObject(Reminder::class.java)
-                        reminder.id = document.id
-                        reminder
-                    }
-
-                    Log.d("OAU", reminders.toString())
-                    onSuccess(reminders)
-                }
-
-                .addOnFailureListener { exception ->
+            remindersCollection.addSnapshotListener { snapshots, exception ->
+                if (exception != null) {
+                    Log.e(
+                        "FirestoreError",
+                        "Error fetching reminders: ${exception.message}",
+                        exception
+                    )
                     onFailure(exception)
+                    return@addSnapshotListener
                 }
+
+                if (snapshots != null && !snapshots.isEmpty) {
+                    val reminders = snapshots.documents.mapNotNull { document ->
+                        try {
+                            val reminder = document.toObject(Reminder::class.java)
+                            reminder?.id = document.id
+                            reminder
+                        } catch (e: Exception) {
+                            Log.e(
+                                "ParsingError",
+                                "Error parsing reminder document: ${document.id}",
+                                e
+                            )
+                            null
+                        }
+                    }
+                    onSuccess(reminders)
+                } else {
+                    Log.d("Firestore", "No reminders found.")
+                    onSuccess(emptyList())
+                }
+            }
         }
 
         fun addReminder(name: String, time: Timestamp, finished: Boolean = false) {
@@ -48,7 +65,7 @@ class FirebaseHelpers {
                 Log.d("AddReminder", "Reminder added with ID: ${documentReference.id}")
             }
                 .addOnFailureListener { e ->
-                    Log.w("AddReminder", "Error adding reminder", e)
+                    Log.e("AddReminder", "Error adding reminder", e)
                 }
         }
 
@@ -68,11 +85,11 @@ class FirebaseHelpers {
                 "id" to reminderId
             )
 
-            reminder.update(updatedReminder).addOnSuccessListener { documentReference ->
-                Log.d("UpdateReminder", "Reminder updated with ID: ${reminderId}")
+            reminder.update(updatedReminder).addOnSuccessListener {
+                Log.d("UpdateReminder", "Reminder updated with ID: $reminderId")
             }
                 .addOnFailureListener { e ->
-                    Log.w("UpdateReminder", "Error updating reminder", e)
+                    Log.e("UpdateReminder", "Error updating reminder", e)
                 }
         }
 
@@ -84,11 +101,11 @@ class FirebaseHelpers {
 
 
 
-            reminder.delete().addOnSuccessListener { documentReference ->
-                Log.d("DeleteReminder", "Reminder deleted with ID: ${reminderId}")
+            reminder.delete().addOnSuccessListener {
+                Log.d("DeleteReminder", "Reminder deleted with ID: $reminderId")
             }
                 .addOnFailureListener { e ->
-                    Log.w("DeleteReminder", "Error deleting reminder", e)
+                    Log.e("DeleteReminder", "Error deleting reminder", e)
                 }
         }
     }

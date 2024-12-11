@@ -22,7 +22,6 @@ class SwipeToEditCallback(
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        // No need to handle move actions
         return false
     }
 
@@ -30,7 +29,6 @@ class SwipeToEditCallback(
         val position = viewHolder.adapterPosition
         val reminder = adapter.getReminderAtPosition(position)
 
-        // Navigate to the edit screen with reminder details
         val intent = Intent(context, ReminderDetailsActivity::class.java).apply {
             putExtra("REMINDER_ID", reminder.id)
             putExtra("REMINDER_TITLE", reminder.name)
@@ -38,8 +36,6 @@ class SwipeToEditCallback(
             putExtra("REMINDER_FINISHED", reminder.finished)
         }
         context.startActivity(intent)
-
-        // Reset the swipe action
         adapter.notifyItemChanged(position)
     }
 
@@ -55,7 +51,6 @@ class SwipeToEditCallback(
         val itemView = viewHolder.itemView
         val paint = Paint()
 
-        // Yellow background for swipe
         paint.color = Color.YELLOW
         c.drawRect(
             itemView.left.toFloat(),
@@ -65,9 +60,8 @@ class SwipeToEditCallback(
             paint
         )
 
-        // Draw an edit icon or label
         val icon =
-            ContextCompat.getDrawable(context, R.drawable.ic_edit) // Replace with your edit icon
+            ContextCompat.getDrawable(context, R.drawable.ic_edit)
         val iconMargin = (itemView.height - icon!!.intrinsicHeight) / 2
         val iconTop = itemView.top + iconMargin
         val iconBottom = iconTop + icon.intrinsicHeight

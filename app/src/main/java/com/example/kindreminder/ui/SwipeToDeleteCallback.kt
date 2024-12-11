@@ -1,7 +1,6 @@
 package com.example.kindreminder.ui
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -10,7 +9,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kindreminder.R
 import com.example.kindreminder.ReminderAdapter
-import com.example.kindreminder.ReminderDetailsActivity
 import com.example.kindreminder.firebase.FirebaseHelpers
 
 class SwipeToDeleteCallback(
@@ -23,7 +21,6 @@ class SwipeToDeleteCallback(
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        // No need to handle move actions
         return false
     }
 
@@ -32,8 +29,6 @@ class SwipeToDeleteCallback(
         val reminder = adapter.getReminderAtPosition(position)
 
         FirebaseHelpers.deleteReminder(reminder.id)
-
-        // Reset the swipe action
         adapter.notifyItemRemoved(position)
     }
 
@@ -49,7 +44,6 @@ class SwipeToDeleteCallback(
         val itemView = viewHolder.itemView
         val paint = Paint()
 
-        // Yellow background for swipe
         paint.color = Color.RED
         c.drawRect(
             itemView.right.toFloat(),
@@ -59,7 +53,6 @@ class SwipeToDeleteCallback(
             paint
         )
 
-        // Draw an edit icon or label
         val icon =
             ContextCompat.getDrawable(context, R.drawable.ic_trash) // Replace with your edit icon
         val iconMargin = (itemView.height - icon!!.intrinsicHeight) / 2
