@@ -1,5 +1,5 @@
 <shape android:shape="oval"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#19A01A" /> <!-- Checked color -->
-    <stroke android:width="14dp" android:color="#19A01A" /> <!-- Border color -->
+    <solid android:color="#333" /> <!-- Checked color -->
+    <stroke android:width="14dp" android:color="#333" /> <!-- Border color -->
 </shape>
