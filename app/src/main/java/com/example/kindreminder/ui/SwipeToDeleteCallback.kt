@@ -32,8 +32,8 @@ class SwipeToDeleteCallback(
         val reminder = adapter.getReminderAtPosition(position)
 
         FirebaseHelpers.deleteReminder(reminder.id)
-
         // Reset the swipe action
+
         adapter.notifyItemRemoved(position)
     }
 

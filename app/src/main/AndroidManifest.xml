@@ -27,6 +27,13 @@
             android:name=".ReminderDetailsActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
+        <service
+            android:name=".firebase.FirebaseMessagingHelpers"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
     </application>
 
