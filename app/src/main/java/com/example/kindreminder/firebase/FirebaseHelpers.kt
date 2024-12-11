@@ -16,21 +16,39 @@ class FirebaseHelpers {
             val db = Firebase.firestore
             val remindersCollection = db.collection("reminders")
 
-            remindersCollection.get()
-                .addOnSuccessListener { documents ->
-                    val reminders = documents.map { document ->
-                        val reminder = document.toObject(Reminder::class.java)
-                        reminder.id = document.id
-                        reminder
-                    }
-
-                    Log.d("OAU", reminders.toString())
-                    onSuccess(reminders)
-                }
-
-                .addOnFailureListener { exception ->
+            // Attach a listener for real-time updates
+            remindersCollection.addSnapshotListener { snapshots, exception ->
+                if (exception != null) {
+                    Log.e(
+                        "FirestoreError",
+                        "Error fetching reminders: ${exception.message}",
+                        exception
+                    )
                     onFailure(exception)
+                    return@addSnapshotListener
                 }
+
+                if (snapshots != null && !snapshots.isEmpty) {
+                    val reminders = snapshots.documents.mapNotNull { document ->
+                        try {
+                            val reminder = document.toObject(Reminder::class.java)
+                            reminder?.id = document.id
+                            reminder
+                        } catch (e: Exception) {
+                            Log.e(
+                                "ParsingError",
+                                "Error parsing reminder document: ${document.id}",
+                                e
+                            )
+                            null
+                        }
+                    }
+                    onSuccess(reminders)
+                } else {
+                    Log.d("Firestore", "No reminders found.")
+                    onSuccess(emptyList()) // Return an empty list if no documents
+                }
+            }
         }
 
         fun addReminder(name: String, time: Timestamp, finished: Boolean = false) {

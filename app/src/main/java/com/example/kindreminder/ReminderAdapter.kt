@@ -1,5 +1,6 @@
 package com.example.kindreminder
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -10,13 +11,14 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kindreminder.classes.Reminder
+import com.example.kindreminder.firebase.FirebaseHelpers
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 
-class ReminderAdapter(private val context: Context, private val reminders: List<Reminder>) :
+class ReminderAdapter(private val context: Context, private var reminders: List<Reminder>) :
     RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder>() {
 
     // ViewHolder class to hold the views for each item
@@ -26,7 +28,13 @@ class ReminderAdapter(private val context: Context, private val reminders: List<
         val finishedCheckBox: CheckBox = view.findViewById(R.id.finishedCheckBox)
     }
 
-    fun formatTimestamp(timestamp: Long): String {
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateReminders(newReminders: List<Reminder>) {
+        reminders = newReminders
+        notifyDataSetChanged()
+    }
+
+    private fun formatTimestamp(timestamp: Long): String {
         val formatter = SimpleDateFormat("EEEE, MMMM d", Locale.getDefault())
         return formatter.format(Date(timestamp))
     }
@@ -63,5 +71,6 @@ class ReminderAdapter(private val context: Context, private val reminders: List<
     fun getReminderAtPosition(position: Int): Reminder {
         return reminders[position]
     }
+
 
 }
